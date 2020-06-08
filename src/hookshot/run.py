@@ -33,6 +33,7 @@ from typing import Dict
 from kedro.framework.context import KedroContext, load_package_context
 from kedro.pipeline import Pipeline
 
+from hookshot.hooks import TeePlugin
 from hookshot.pipeline import create_pipelines
 
 
@@ -45,6 +46,8 @@ class ProjectContext(KedroContext):
     # `project_version` is the version of kedro used to generate the project
     project_version = "0.16.1"
     package_name = "hookshot"
+
+    hooks = (TeePlugin(),)
 
     def _get_pipelines(self) -> Dict[str, Pipeline]:
         return create_pipelines()

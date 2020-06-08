@@ -47,4 +47,18 @@ example_iris_data:
   type: pandas.CSVDataSet
   filepath: data/01_raw/iris.csv
 
+example_train_x:
+  type: pandas.ParquetDataSet
+  filepath: data/05_model_input/train_x.parquet.snappy
 
+example_train_y:
+  type: pandas.ParquetDataSet
+  filepath: data/05_model_input/train_y.parquet.snappy
+
+example_test_x:
+  type: pandas.ParquetDataSet
+  filepath: data/05_model_input/test_x.parquet.snappy
+
+example_test_y:
+  type: pandas.ParquetDataSet
+  filepath: data/05_model_input/test_y.parquet.snappy

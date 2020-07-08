@@ -55,10 +55,18 @@ class SlowDataSet(MemoryDataSet):
         self._save_delay = save_delay
         super().__init__(data, copy_mode)
 
+    def __str__(self):
+        return f"{super().__str__()} at {hex(id(self))}"
+
     def _load(self) -> Any:
+        self._logger.debug("Loading %s", str(self))
         sleep(self._load_delay)
-        return super()._load()
+        data = super()._load()
+        self._logger.debug("Loaded %s", str(self))
+        return data
 
     def _save(self, data: Any):
+        self._logger.debug("Saving %s", str(self))
         sleep(self._save_delay)
         super()._save(data)
+        self._logger.debug("Saved %s", str(self))

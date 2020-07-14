@@ -75,6 +75,9 @@ PARAMS_ARG_HELP = """Specify extra parameters that you want to pass
 to the context initializer. Items must be separated by comma, keys - by colon,
 example: param1:value1,param2:value2. Each parameter is split by the first comma,
 so parameter values are allowed to contain colons, parameter keys are not."""
+HOOKS_ARG_HELP = """Specify extra hooks that you want to pass
+to the context initializer. Items must be separated by comma,
+example: hookshot.hooks.TeePlugin,hookshot.hooks.CachePlugin."""
 
 
 def _config_file_callback(ctx, param, value):  # pylint: disable=unused-argument
@@ -190,6 +193,7 @@ def cli():
 @click.option(
     "--params", type=str, default="", help=PARAMS_ARG_HELP, callback=_split_params
 )
+@click.option("--hooks", type=str, multiple=True, help=HOOKS_ARG_HELP)
 def run(
     tag,
     env,
@@ -203,6 +207,7 @@ def run(
     pipeline,
     config,
     params,
+    hooks,
 ):
     """Run the pipeline."""
     if parallel and runner:
@@ -217,8 +222,10 @@ def run(
 
     tag = _get_values_as_tuple(tag) if tag else tag
     node_names = _get_values_as_tuple(node_names) if node_names else node_names
+    hooks = _get_values_as_tuple(hooks) if hooks else hooks
+    hooks = tuple([load_obj(hook)() for hook in hooks])
 
-    context = load_context(Path.cwd(), env=env, extra_params=params)
+    context = load_context(Path.cwd(), env=env, extra_params=params, extra_hooks=hooks)
     context.run(
         tags=tag,
         runner=runner_class(),

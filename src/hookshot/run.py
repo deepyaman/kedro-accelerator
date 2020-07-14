@@ -28,12 +28,11 @@
 
 """Application entry point."""
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict, Tuple, Union
 
 from kedro.framework.context import KedroContext, load_package_context
 from kedro.pipeline import Pipeline
 
-from hookshot.hooks import TeePlugin
 from hookshot.pipeline import create_pipelines
 
 
@@ -47,7 +46,33 @@ class ProjectContext(KedroContext):
     project_version = "0.16.1"
     package_name = "hookshot"
 
-    hooks = (TeePlugin(),)
+    def __init__(
+        self,
+        project_path: Union[Path, str],
+        env: str = None,
+        extra_params: Dict[str, Any] = None,
+        extra_hooks: Tuple = None,
+    ):
+        """Create a context object by providing the root of a Kedro project and
+        the environment configuration subfolders (see ``kedro.config.ConfigLoader``)
+
+        Raises:
+            KedroContextError: If there is a mismatch
+                between Kedro project version and package version.
+
+        Args:
+            project_path: Project path to define the context for.
+            env: Optional argument for configuration default environment to be used
+                for running the pipeline. If not specified, it defaults to "local".
+            extra_params: Optional dictionary containing extra project parameters.
+                If specified, will update (and therefore take precedence over)
+                the parameters retrieved from the project configuration.
+            extra_hooks: Optional tuple containing extra hooks to extend
+                KedroContext's execution. If specified, will be appended
+                to the list of hooks provided by user.
+        """
+        self.hooks += extra_hooks or ()
+        super().__init__(project_path, env, extra_params)
 
     def _get_pipelines(self) -> Dict[str, Pipeline]:
         return create_pipelines()

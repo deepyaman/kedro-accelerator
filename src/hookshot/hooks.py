@@ -2,7 +2,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Dict
 
 from kedro.framework.hooks import hook_impl
-from kedro.io import DataCatalog, MemoryDataSet
+from kedro.io import CachedDataSet, DataCatalog, MemoryDataSet
 from kedro.pipeline import Pipeline
 
 
@@ -55,3 +55,16 @@ class TeePlugin:
     @hook_impl
     def on_pipeline_error(self) -> None:
         self._cleanup()
+
+
+class CachePlugin:
+    @hook_impl
+    def before_pipeline_run(self, pipeline: Pipeline, catalog: DataCatalog) -> None:
+        # Wrap intermediate inputs and outputs using ``CachedDataSet``s.
+        catalog.add_all(
+            {
+                name: CachedDataSet(getattr(catalog.datasets, name))
+                for name in set(catalog.list()) - pipeline.inputs() - pipeline.outputs()
+            },
+            replace=True,
+        )

@@ -1,9 +1,27 @@
+import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Dict
 
+import kedro
 from kedro.framework.hooks import hook_impl
 from kedro.io import CachedDataSet, DataCatalog, MemoryDataSet
 from kedro.pipeline import Pipeline
+
+
+def _sub_nonword_chars(data_set_name: str) -> str:
+    """Replace non-word characters in data set names since Kedro 0.16.2.
+
+    Args:
+        data_set_name: The data set name registered in the data catalog.
+
+    Returns:
+        The Kedro-version-dependent name used in `DataCatalog.datasets`.
+    """
+    if kedro.__version__ >= "0.16.2":
+        # https://github.com/quantumblacklabs/kedro/commit/3faa0d454f3584f39285843f1ae28bec18cc3fee
+        return re.sub("[^0-9a-zA-Z_]+", "__", data_set_name)
+    else:
+        return data_set_name
 
 
 class TeePlugin:
@@ -30,11 +48,12 @@ class TeePlugin:
     def after_node_run(self, catalog: DataCatalog, outputs: Dict[str, Any]) -> None:
         for name, data in outputs.items():
             if name in self.data_set_names:  # ``DataSet`` is registered
-                physical_dataset = getattr(self.physical_catalog.datasets, name)
+                cleaned_name = _sub_nonword_chars(name)
+                physical_dataset = getattr(self.physical_catalog.datasets, cleaned_name)
 
                 # If the intermediate data set was "replaced," persist a
                 # copy of the output data with the original save method.
-                if getattr(catalog.datasets, name) is not physical_dataset:
+                if getattr(catalog.datasets, cleaned_name) is not physical_dataset:
                     self.save_futures.add(
                         self.pool.submit(self.physical_catalog.save, name, data)
                     )
@@ -66,7 +85,7 @@ class CachePlugin:
         # Wrap intermediate inputs and outputs using ``CachedDataSet``s.
         catalog.add_all(
             {
-                name: CachedDataSet(getattr(catalog.datasets, name))
+                name: CachedDataSet(getattr(catalog.datasets, _sub_nonword_chars(name)))
                 for name in set(catalog.list()) - pipeline.inputs() - pipeline.outputs()
             },
             replace=True,

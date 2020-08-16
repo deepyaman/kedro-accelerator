@@ -33,7 +33,7 @@ from typing import Any, Dict, Tuple, Union
 from kedro.framework.context import KedroContext, load_package_context
 from kedro.pipeline import Pipeline
 
-from hookshot.pipeline import create_pipelines
+from kedro_accelerator.pipeline import create_pipelines
 
 
 class ProjectContext(KedroContext):
@@ -41,10 +41,10 @@ class ProjectContext(KedroContext):
     or create new ones (e.g. as required by plugins)
     """
 
-    project_name = "Hookshot"
+    project_name = "Kedro-Accelerator"
     # `project_version` is the version of kedro used to generate the project
     project_version = "0.16.1"
-    package_name = "hookshot"
+    package_name = "kedro_accelerator"
 
     def __init__(
         self,

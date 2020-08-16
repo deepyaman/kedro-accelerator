@@ -79,7 +79,7 @@ example: param1:value1,param2:value2. Each parameter is split by the first comma
 so parameter values are allowed to contain colons, parameter keys are not."""
 HOOKS_ARG_HELP = """Specify extra hooks that you want to pass
 to the context initializer. Items must be separated by comma,
-example: hookshot.hooks.TeePlugin,hookshot.hooks.CachePlugin."""
+example: kedro_accelerator.plugins.TeePlugin,kedro_accelerator.plugins.CachePlugin."""
 
 
 def _config_file_callback(ctx, param, value):  # pylint: disable=unused-argument

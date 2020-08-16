@@ -29,10 +29,12 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="hookshot",
+    name="kedro-accelerator",
     version="0.1",
-    packages=find_packages(include=["hookshot.plugins"]),
-    entry_points={"kedro.hooks": ["hookshot = hookshot.plugins:hooks"]},
+    packages=find_packages(include=["kedro_accelerator.plugins"]),
+    entry_points={
+        "kedro.hooks": ["kedro-accelerator = kedro_accelerator.plugins:hooks"]
+    },
     install_requires=["kedro>=0.16, <0.17"],
     extras_require={
         "docs": [

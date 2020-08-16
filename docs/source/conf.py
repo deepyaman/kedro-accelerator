@@ -29,7 +29,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# hookshot documentation build
+# kedro_accelerator documentation build
 # configuration file, created by sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its
@@ -50,11 +50,11 @@ import re
 from kedro.framework.cli.utils import find_stylesheets
 from recommonmark.transform import AutoStructify
 
-from hookshot import __version__ as release
+from kedro_accelerator import __version__ as release
 
 # -- Project information -----------------------------------------------------
 
-project = "hookshot"
+project = "kedro_accelerator"
 copyright = "2020, QuantumBlack Visual Analytics Limited"
 author = "QuantumBlack"
 
@@ -149,7 +149,7 @@ html_show_sourcelink = False
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "hookshotdoc"
+htmlhelp_basename = "kedro_acceleratordoc"
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -177,8 +177,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "hookshot.tex",
-        "hookshot Documentation",
+        "kedro_accelerator.tex",
+        "kedro_accelerator Documentation",
         "QuantumBlack",
         "manual",
     )
@@ -191,8 +191,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "hookshot",
-        "hookshot Documentation",
+        "kedro_accelerator",
+        "kedro_accelerator Documentation",
         [author],
         1,
     )
@@ -206,11 +206,11 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "hookshot",
-        "hookshot Documentation",
+        "kedro_accelerator",
+        "kedro_accelerator Documentation",
         author,
-        "hookshot",
-        "Project hookshot codebase.",
+        "kedro_accelerator",
+        "Project kedro_accelerator codebase.",
         "Data-Science",
     )
 ]

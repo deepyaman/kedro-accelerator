@@ -39,7 +39,7 @@ from pathlib import Path
 
 import pytest
 
-from hookshot.run import ProjectContext
+from kedro_accelerator.run import ProjectContext
 
 
 @pytest.fixture
@@ -49,7 +49,7 @@ def project_context():
 
 class TestProjectContext:
     def test_project_name(self, project_context):
-        assert project_context.project_name == "Hookshot"
+        assert project_context.project_name == "Kedro-Accelerator"
 
     def test_project_version(self, project_context):
         assert project_context.project_version == "0.16.1"

@@ -48,7 +48,7 @@ example_iris_data:
   filepath: data/01_raw/iris.csv
 
 _slow: &slow
-  type: hookshot.io.SlowDataSet
+  type: kedro_accelerator.io.SlowDataSet
   load_delay: 10
   save_delay: 10
 

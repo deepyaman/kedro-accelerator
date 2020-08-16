@@ -14,7 +14,7 @@ class SlowDataSet(MemoryDataSet):
     Example:
     ::
 
-        >>> from hookshot.io import SlowDataSet
+        >>> from kedro_accelerator.io import SlowDataSet
         >>> import pandas as pd
         >>>
         >>> data = pd.DataFrame({'col1': [1, 2], 'col2': [4, 5],

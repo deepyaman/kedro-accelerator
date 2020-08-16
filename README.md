@@ -1,4 +1,4 @@
-# Hookshot
+# Kedro-Accelerator
 
 ## Overview
 

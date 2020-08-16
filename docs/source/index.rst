@@ -1,8 +1,8 @@
-.. hookshot documentation master file, created by sphinx-quickstart.
+.. kedro_accelerator documentation master file, created by sphinx-quickstart.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to project's hookshot API docs!
+Welcome to project's kedro_accelerator API docs!
 =============================================
 
 .. toctree::

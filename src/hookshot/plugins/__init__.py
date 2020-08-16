@@ -57,6 +57,9 @@ class TeePlugin:
         self._cleanup()
 
 
+hooks = TeePlugin()
+
+
 class CachePlugin:
     @hook_impl
     def before_pipeline_run(self, pipeline: Pipeline, catalog: DataCatalog) -> None:

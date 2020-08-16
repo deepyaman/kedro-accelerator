@@ -28,28 +28,12 @@
 
 from setuptools import find_packages, setup
 
-entry_point = (
-    "hookshot = hookshot.run:run_package"
-)
-
-
-# get the dependencies and installs
-with open("requirements.txt", "r", encoding="utf-8") as f:
-    # Make sure we strip all comments and options (e.g "--extra-index-url")
-    # that arise from a modified pip.conf file that configure global options
-    # when running kedro build-reqs
-    requires = []
-    for line in f:
-        req = line.split("#", 1)[0].strip()
-        if req and not req.startswith("--"):
-            requires.append(req)
-
 setup(
     name="hookshot",
     version="0.1",
-    packages=find_packages(exclude=["tests"]),
-    entry_points={"console_scripts": [entry_point]},
-    install_requires=requires,
+    packages=find_packages(include=["hookshot.plugins"]),
+    entry_points={"kedro.hooks": ["hookshot = hookshot.plugins:hooks"]},
+    install_requires=["kedro>=0.16, <0.17"],
     extras_require={
         "docs": [
             "sphinx>=1.6.3, <2.0",

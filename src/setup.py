@@ -26,15 +26,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from inspect import getdoc
+
 from setuptools import find_packages, setup
+
+import kedro_accelerator
 
 setup(
     name="kedro-accelerator",
-    version="0.1",
+    version=kedro_accelerator.__version__,
+    description=getdoc(kedro_accelerator).partition("\n")[0],
+    url="https://github.com/deepyaman/kedro-accelerator",
+    author="Deepyaman Datta",
+    author_email="deepyaman.datta@utexas.edu",
+    license="MIT",
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
+    keywords="kedro",
     packages=find_packages(include=["kedro_accelerator.plugins"]),
     entry_points={
         "kedro.hooks": ["kedro-accelerator = kedro_accelerator.plugins:hooks"]
     },
+    python_requires=">=3.6, <3.9",
     install_requires=["kedro>=0.16, <0.17"],
     extras_require={
         "docs": [

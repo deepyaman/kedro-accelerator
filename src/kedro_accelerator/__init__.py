@@ -25,7 +25,7 @@
 #
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Kedro-Accelerator
+"""Kedro-Accelerator speeds up pipelines by parallelizing I/O in the background.
 """
 
 __version__ = "0.1"

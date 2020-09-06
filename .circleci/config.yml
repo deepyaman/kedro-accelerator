@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@0.2.1
+  python: circleci/python@0.3.2
 
 jobs:
   build-and-test:
@@ -9,10 +9,13 @@ jobs:
     steps:
       - checkout
       - python/load-cache
-      - python/install-deps
+          dependency-file: src/requirements.txt
+      - python/install-deps:
+          dependency-file: src/requirements.txt
       - python/save-cache
+          dependency-file: src/requirements.txt
       - run:
-          command: ./manage.py test
+          command: kedro test
           name: Test
 
 workflows:

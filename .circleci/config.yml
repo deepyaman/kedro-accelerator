@@ -10,8 +10,9 @@ jobs:
         type: string
       kedro-version:
         type: string
-    executor: python/default:
-      tag: << parameters.python-version >>
+    executor:
+      python/default:
+        tag: << parameters.python-version >>
     steps:
       - checkout
       - python/load-cache:

@@ -19,5 +19,6 @@ workflows:
   main:
     jobs:
       - build-and-test:
-          parameters:
-            dependency-file: src/requirements.txt
+          matrix:
+            parameters:
+              dependency-file: src/requirements.txt

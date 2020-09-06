@@ -17,9 +17,9 @@ jobs:
       - checkout
       - python/load-cache:
           dependency-file: src/requirements.txt
-      - python/install-deps
+      - python/install-deps:
           dependency-file: src/requirements.txt
-      - python/save-cache
+      - python/save-cache:
           dependency-file: src/requirements.txt
       - run:
           command: kedro test

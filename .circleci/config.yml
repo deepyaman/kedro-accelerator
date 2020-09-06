@@ -5,8 +5,6 @@ orbs:
 
 jobs:
   build-and-test:
-    parameters:
-      dependency-file: src/requirements.txt
     executor: python/default
     steps:
       - checkout
@@ -21,3 +19,5 @@ workflows:
   main:
     jobs:
       - build-and-test
+          parameters:
+            dependency-file: src/requirements.txt

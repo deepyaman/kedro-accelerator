@@ -5,12 +5,21 @@ orbs:
 
 jobs:
   build-and-test:
-    executor: python/default
+    parameters:
+      python-version:
+        type: string
+      kedro-version:
+        type: string
+    executor: python/default:
+      tag: << parameters.python-version >>
     steps:
       - checkout
-      - python/load-cache
+      - python/load-cache:
+          dependency-file: src/requirements.txt
       - python/install-deps
+          dependency-file: src/requirements.txt
       - python/save-cache
+          dependency-file: src/requirements.txt
       - run:
           command: kedro test
           name: Test
@@ -21,4 +30,5 @@ workflows:
       - build-and-test:
           matrix:
             parameters:
-              dependency-file: src/requirements.txt
+              python-version: [3.6, 3.7, 3.8]
+              kedro-version: [0.16.0, 0.16.1, 0.16.2, 0.16.3, 0.16.4]

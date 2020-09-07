@@ -13,8 +13,8 @@ jobs:
     executor:
       name: python/default
       tag: << parameters.python-version >>
-      environment:
-        KEDRO_VERSION: << parameters.kedro-version >>
+    environment:
+      KEDRO_VERSION: << parameters.kedro-version >>
     steps:
       - checkout
       - python/load-cache:

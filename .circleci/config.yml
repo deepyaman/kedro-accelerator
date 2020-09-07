@@ -4,7 +4,7 @@ orbs:
   python: circleci/python@0.3.2
 
 jobs:
-  build-and-test:
+  build-and-run:
     parameters:
       python-version:
         type: string
@@ -26,13 +26,13 @@ jobs:
           key: pip-<< parameters.kedro-version >>-<< parameters.python-version >>
           dependency-file: src/requirements.txt
       - run:
-          command: kedro test
-          name: Test
+          command: kedro run --hooks src.kedro_accelerator.plugins.TeePlugin
+          name: Run
 
 workflows:
   main:
     jobs:
-      - build-and-test:
+      - build-and-run:
           matrix:
             parameters:
               python-version: ["3.6", "3.7", "3.8"]

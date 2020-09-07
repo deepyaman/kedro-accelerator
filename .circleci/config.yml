@@ -28,9 +28,6 @@ jobs:
       - run:
           command: kedro test
           name: Test
-      - run:
-          command: kedro lint
-          name: Lint
 
 workflows:
   main:

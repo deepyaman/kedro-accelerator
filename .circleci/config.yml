@@ -18,10 +18,12 @@ jobs:
     steps:
       - checkout
       - python/load-cache:
+          key: pip-<< parameters.kedro-version >>
           dependency-file: src/requirements.txt
       - python/install-deps:
           dependency-file: src/requirements.txt
       - python/save-cache:
+          key: pip-<< parameters.kedro-version >>
           dependency-file: src/requirements.txt
       - run:
           command: kedro test

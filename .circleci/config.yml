@@ -34,6 +34,15 @@ job-setup: &job-setup
     KEDRO_VERSION: << parameters.kedro-version >>
 
 jobs:
+  build-and-lint:
+    <<: *job-setup
+    steps:
+      - build:
+          python-version: << parameters.python-version >>
+          kedro-version: << parameters.kedro-version >>
+      - run:
+          command: kedro lint --check-only
+          name: Lint
   build-and-run:
     <<: *job-setup
     steps:
@@ -56,6 +65,9 @@ jobs:
 workflows:
   main:
     jobs:
+      - build-and-lint:
+          python-version: "3.8"
+          kedro-version: 0.16.4
       - build-and-run:
           matrix:
             parameters:

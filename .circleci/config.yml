@@ -3,18 +3,13 @@ version: 2.1
 orbs:
   python: circleci/python@0.3.2
 
-jobs:
-  build-and-run:
+commands:
+  build:
     parameters:
       python-version:
         type: string
       kedro-version:
         type: string
-    executor:
-      name: python/default
-      tag: << parameters.python-version >>
-    environment:
-      KEDRO_VERSION: << parameters.kedro-version >>
     steps:
       - checkout
       - python/load-cache:
@@ -25,9 +20,38 @@ jobs:
       - python/save-cache:
           key: pip-<< parameters.kedro-version >>-<< parameters.python-version >>
           dependency-file: src/requirements.txt
+
+job-setup: &job-setup
+  parameters:
+    python-version:
+      type: string
+    kedro-version:
+      type: string
+  executor:
+    name: python/default
+    tag: << parameters.python-version >>
+  environment:
+    KEDRO_VERSION: << parameters.kedro-version >>
+
+jobs:
+  build-and-run:
+    <<: *job-setup
+    steps:
+      - build:
+          python-version: << parameters.python-version >>
+          kedro-version: << parameters.kedro-version >>
       - run:
           command: kedro run --hooks src.kedro_accelerator.plugins.TeePlugin
           name: Run
+  build-and-test:
+    <<: *job-setup
+    steps:
+      - build:
+          python-version: << parameters.python-version >>
+          kedro-version: << parameters.kedro-version >>
+      - run:
+          command: kedro test
+          name: Test
 
 workflows:
   main:
@@ -37,3 +61,6 @@ workflows:
             parameters:
               python-version: ["3.6", "3.7", "3.8"]
               kedro-version: [0.16.0, 0.16.1, 0.16.2, 0.16.3, 0.16.4]
+      - build-and-test:
+          python-version: "3.8"
+          kedro-version: 0.16.4

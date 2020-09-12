@@ -1,1 +1,4 @@
 context_path: kedro_accelerator.run.ProjectContext
+project_name: "Kedro-Accelerator"
+project_version: "0.16.1"
+package_name: "kedro_accelerator"

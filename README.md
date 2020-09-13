@@ -20,7 +20,7 @@ pip install kedro-accelerator
 
 ## How do I use Kedro-Accelerator?
 
-As of Kedro 0.16.4, `TeePlugin`—the core of Kedro-Accelerator—will be auto-discovered upon [installation](#how-do-i-install-kedro-accelerator). In older versions, [hook implementations should be registered with Kedro through the `ProjectContext`](https://kedro.readthedocs.io/en/0.16.3/04_user_guide/15_hooks.html#registering-your-hook-implementations-with-kedro). Hooks were introduced in Kedro 0.16.0.
+As of Kedro 0.16.4, `TeePlugin`—the core of Kedro-Accelerator—will be auto-discovered upon [installation](https://github.com/deepyaman/kedro-accelerator/blob/v0.1.0/README.md#how-do-i-install-kedro-accelerator). In older versions, [hook implementations should be registered with Kedro through the `ProjectContext`](https://kedro.readthedocs.io/en/0.16.3/04_user_guide/15_hooks.html#registering-your-hook-implementations-with-kedro). Hooks were introduced in Kedro 0.16.0.
 
 ### Prerequisites
 
@@ -31,7 +31,7 @@ The following conditions must be true for Kedro-Accelerator to speed up your pip
 
 ### Example
 
-The Kedro-Accelerator repository includes the Iris data set example pipeline generated using Kedro 0.16.1. Intermediate data sets have been replaced with custom `SlowDataSet` instances to simulate a slow filesystem. You can try different load and save delays by modifying [`catalog.yml`](conf/base/catalog.yml).
+The Kedro-Accelerator repository includes the Iris data set example pipeline generated using Kedro 0.16.1. Intermediate data sets have been replaced with custom `SlowDataSet` instances to simulate a slow filesystem. You can try different load and save delays by modifying [`catalog.yml`](https://github.com/deepyaman/kedro-accelerator/blob/v0.1.0/conf/base/catalog.yml).
 
 To get started, [create and activate a new virtual environment](https://kedro.readthedocs.io/en/0.16.5/02_get_started/01_prerequisites.html#virtual-environments). Then, clone the repository and pip install requirements:
 
@@ -53,4 +53,4 @@ For a more complete discussion of the above benchmarks, see [quantumblacklabs/ke
 
 ## What license do you use?
 
-Kedro-Accelerator is licensed under the [MIT](LICENSE) License.
+Kedro-Accelerator is licensed under the [MIT](https://github.com/deepyaman/kedro-accelerator/blob/v0.1.0/LICENSE) License.

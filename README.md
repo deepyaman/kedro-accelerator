@@ -20,9 +20,15 @@ pip install kedro-accelerator
 
 ## How do I use Kedro-Accelerator?
 
+As of Kedro 0.16.4, `TeePlugin`—the core of Kedro-Accelerator—will be auto-discovered upon [installation](#how-do-i-install-kedro-accelerator). In older versions, [hook implementations should be registered with Kedro through the `ProjectContext`](https://kedro.readthedocs.io/en/0.16.3/04_user_guide/15_hooks.html#registering-your-hook-implementations-with-kedro). Hooks were introduced in Kedro 0.16.0.
+
 ### Prerequisites
 
 The following conditions must be true for Kedro-Accelerator to speed up your pipeline:
 
 * Your pipeline must not use transcoding.
 * Your project must use `SequentialRunner`.
+
+## What license do you use?
+
+Kedro-Airflow is licensed under the [MIT](LICENSE) License.

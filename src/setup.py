@@ -27,6 +27,7 @@
 # limitations under the License.
 
 from inspect import getdoc
+from pathlib import Path
 
 from setuptools import find_packages, setup
 
@@ -36,6 +37,8 @@ setup(
     name="kedro-accelerator",
     version=kedro_accelerator.__version__,
     description=getdoc(kedro_accelerator).partition("\n")[0],
+    long_description=(Path(__file__) / "../../README.md").resolve().read_text("utf-8"),
+    long_description_content_type="text/markdown",
     url="https://github.com/deepyaman/kedro-accelerator",
     author="Deepyaman Datta",
     author_email="deepyaman.datta@utexas.edu",

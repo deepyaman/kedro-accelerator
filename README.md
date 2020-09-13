@@ -1,138 +1,56 @@
 # Kedro-Accelerator
 
-## Overview
+Kedro pipelines consist of nodes, where an output from one node _A_ can be an input to another node _B_. The Data Catalog defines where and how Kedro loads and saves these inputs and outputs, respectively. By default, a sequential Kedro pipeline:
 
-This is your new Kedro project, which was generated using `Kedro 0.16.1` by running:
+1. runs node _A_
+2. persists the output of _A_, often to remote storage like Amazon S3
+3. potentially runs other nodes
+4. fetches the output of _A_, loading it back into memory
+5. runs node _B_
 
-```
-kedro new
-```
+Persisting intermediate data sets enables partial pipeline runs (e.g. running node _B_ without rerunning node _A_) and analysis/debugging of these data sets. However, the I/O in steps 2 and 4 above was not necessary to run node _B_, given the requisite data was already in memory after step 1. Kedro-Accelerator speeds up pipelines by parallelizing this I/O in the background.
 
-Take a look at the [documentation](https://kedro.readthedocs.io) to get started.
+## How do I install Kedro-Accelerator?
 
-## Rules and guidelines
+Kedro-Accelerator is a Python plugin. To install it:
 
-In order to get the best out of the template:
-
- * Please don't remove any lines from the `.gitignore` file we provide
- * Make sure your results can be reproduced by following a data engineering convention, e.g. the one we suggest [here](https://kedro.readthedocs.io/en/stable/06_resources/01_faq.html#what-is-data-engineering-convention)
- * Don't commit any data to your repository
- * Don't commit any credentials or local configuration to your repository
- * Keep all credentials or local configuration in `conf/local/`
-
-## Installing dependencies
-
-Declare any dependencies in `src/requirements.txt` for `pip` installation and `src/environment.yml` for `conda` installation.
-
-To install them, run:
-
-```
-kedro install
+```bash
+pip install kedro-accelerator
 ```
 
-## Running Kedro
+## How do I use Kedro-Accelerator?
 
-You can run your Kedro project with:
+As of Kedro 0.16.4, `TeePlugin`—the core of Kedro-Accelerator—will be auto-discovered upon [installation](https://github.com/deepyaman/kedro-accelerator/blob/v0.1.0/README.md#how-do-i-install-kedro-accelerator). In older versions, [hook implementations should be registered with Kedro through the `ProjectContext`](https://kedro.readthedocs.io/en/0.16.3/04_user_guide/15_hooks.html#registering-your-hook-implementations-with-kedro). Hooks were introduced in Kedro 0.16.0.
 
-```
-kedro run
-```
+### Prerequisites
 
-## Testing Kedro
+The following conditions must be true for Kedro-Accelerator to speed up your pipeline:
 
-Have a look at the file `src/tests/test_run.py` for instructions on how to write your tests. You can run your tests with the following command:
+- Your pipeline must not use transcoding.
+- Your project must use `SequentialRunner`.
 
-```
-kedro test
-```
+### Example
 
-To configure the coverage threshold, please have a look at the file `.coveragerc`.
+The Kedro-Accelerator repository includes the Iris data set example pipeline generated using Kedro 0.16.1. Intermediate data sets have been replaced with custom `SlowDataSet` instances to simulate a slow filesystem. You can try different load and save delays by modifying [`catalog.yml`](https://github.com/deepyaman/kedro-accelerator/blob/v0.1.0/conf/base/catalog.yml).
 
+To get started, [create and activate a new virtual environment](https://kedro.readthedocs.io/en/0.16.5/02_get_started/01_prerequisites.html#virtual-environments). Then, clone the repository and pip install requirements:
 
-## Working with Kedro from notebooks
-
-In order to use notebooks in your Kedro project, you need to install Jupyter:
-
-```
-pip install jupyter
+```bash
+git clone https://github.com/deepyaman/kedro-accelerator.git
+cd kedro-accelerator
+KEDRO_VERSION=0.16.5 pip install -r src/requirements.txt  # Specify your desired Kedro version.
 ```
 
-For using Jupyter Lab, you need to install it:
+You can compare pipeline execution times with and without `TeePlugin`. Kedro-Accelerator also provides `CachePlugin` so that you can test performance using `CachedDataSet` in asynchronous mode. Assuming parametrized load and save delays of 10 seconds for intermediate datasets, you should see the following results:
 
-```
-pip install jupyterlab
-```
+| Strategy                                                  | Command                                                               | Total time                                                                  | Log                                                                                |
+| --------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Baseline (i.e. no caching/plugins)                        | `kedro run`                                                           | 2 minutes                                                                   | [Log](https://github.com/quantumblacklabs/kedro/issues/420#issuecomment-658320262) |
+| `TeePlugin`                                               | `kedro run --hooks src.kedro_accelerator.plugins.TeePlugin`           | 10 seconds (saving all outputs)                                             | [Log](https://github.com/quantumblacklabs/kedro/issues/420#issuecomment-658323282) |
+| `CachePlugin` (i.e. `CachedDataSet`) with `is_async=True` | `kedro run --async --hooks src.kedro_accelerator.plugins.CachePlugin` | 30 seconds (saving `split_data`, `train_model`, and `predict` node outputs) | [Log](https://github.com/quantumblacklabs/kedro/issues/420#issuecomment-658331422) |
 
-After installing Jupyter, you can start a local notebook server:
+For a more complete discussion of the above benchmarks, see [quantumblacklabs/kedro#420 (comment)](https://github.com/quantumblacklabs/kedro/issues/420#issuecomment-658320132).
 
-```
-kedro jupyter notebook
-```
+## What license do you use?
 
-You can also start Jupyter Lab:
-
-```
-kedro jupyter lab
-```
-
-And if you want to run an IPython session:
-
-```
-kedro ipython
-```
-
-Running Jupyter or IPython this way provides the following variables in
-scope: `proj_dir`, `proj_name`, `conf`, `io`, `parameters` and `startup_error`.
-
-### Converting notebook cells to nodes in a Kedro project
-
-Once you are happy with a notebook, you may want to move your code over into the Kedro project structure for the next stage in your development. This is done through a mixture of [cell tagging](https://jupyter-notebook.readthedocs.io/en/stable/changelog.html#cell-tags) and Kedro CLI commands.
-
-By adding the `node` tag to a cell and running the command below, the cell's source code will be copied over to a Python file within `src/<package_name>/nodes/`.
-```
-kedro jupyter convert <filepath_to_my_notebook>
-```
-> *Note:* The name of the Python file matches the name of the original notebook.
-
-Alternatively, you may want to transform all your notebooks in one go. To this end, you can run the following command to convert all notebook files found in the project root directory and under any of its sub-folders.
-```
-kedro jupyter convert --all
-```
-
-### Ignoring notebook output cells in `git`
-
-In order to automatically strip out all output cell contents before committing to `git`, you can run `kedro activate-nbstripout`. This will add a hook in `.git/config` which will run `nbstripout` before anything is committed to `git`.
-
-> *Note:* Your output cells will be left intact locally.
-
-## Package the project
-
-In order to package the project's Python code in `.egg` and / or a `.wheel` file, you can run:
-
-```
-kedro package
-```
-
-After running that, you can find the two packages in `src/dist/`.
-
-## Building API documentation
-
-To build API docs for your code using Sphinx, run:
-
-```
-kedro build-docs
-```
-
-See your documentation by opening `docs/build/html/index.html`.
-
-## Building the project requirements
-
-To generate or update the dependency requirements for your project, run:
-
-```
-kedro build-reqs
-```
-
-This will copy the contents of `src/requirements.txt` into a new file `src/requirements.in` which will be used as the source for `pip-compile`. You can see the output of the resolution by opening `src/requirements.txt`.
-
-After this, if you'd like to update your project requirements, please update `src/requirements.in` and re-run `kedro build-reqs`.
+Kedro-Accelerator is licensed under the [MIT](https://github.com/deepyaman/kedro-accelerator/blob/v0.1.0/LICENSE) License.

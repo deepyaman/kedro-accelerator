@@ -22,4 +22,7 @@ pip install kedro-accelerator
 
 ### Prerequisites
 
-The following conditions must be met to _accelerate_ your pipeline:
+The following conditions must be true for Kedro-Accelerator to speed up your pipeline:
+
+* Your pipeline must not use transcoding.
+* Your project must use `SequentialRunner`.

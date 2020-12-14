@@ -33,12 +33,12 @@ The following conditions must be true for Kedro-Accelerator to speed up your pip
 
 The Kedro-Accelerator repository includes the Iris data set example pipeline generated using Kedro 0.16.1. Intermediate data sets have been replaced with custom `SlowDataSet` instances to simulate a slow filesystem. You can try different load and save delays by modifying [`catalog.yml`](https://github.com/deepyaman/kedro-accelerator/blob/v0.1.0/conf/base/catalog.yml).
 
-To get started, [create and activate a new virtual environment](https://kedro.readthedocs.io/en/0.16.5/02_get_started/01_prerequisites.html#virtual-environments). Then, clone the repository and pip install requirements:
+To get started, [create and activate a new virtual environment](https://kedro.readthedocs.io/en/0.16.6/02_get_started/01_prerequisites.html#virtual-environments). Then, clone the repository and pip install requirements:
 
 ```bash
 git clone https://github.com/deepyaman/kedro-accelerator.git
 cd kedro-accelerator
-KEDRO_VERSION=0.16.5 pip install -r src/requirements.txt  # Specify your desired Kedro version.
+KEDRO_VERSION=0.16.6 pip install -r src/requirements.txt  # Specify your desired Kedro version.
 ```
 
 You can compare pipeline execution times with and without `TeePlugin`. Kedro-Accelerator also provides `CachePlugin` so that you can test performance using `CachedDataSet` in asynchronous mode. Assuming parametrized load and save delays of 10 seconds for intermediate datasets, you should see the following results:

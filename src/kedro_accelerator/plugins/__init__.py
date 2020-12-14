@@ -17,7 +17,10 @@ def _sub_nonword_chars(data_set_name: str) -> str:
     Returns:
         The Kedro-version-dependent name used in `DataCatalog.datasets`.
     """
-    if kedro.__version__ >= "0.16.2":
+    if kedro.__version__ >= "0.16.6":
+        # https://github.com/quantumblacklabs/kedro/commit/93e4cc3fe7a5ac3d4d7e6a372a2bcb26ce123b85
+        return re.sub(r"\W+", "__", data_set_name)
+    elif kedro.__version__ >= "0.16.2":
         # https://github.com/quantumblacklabs/kedro/commit/3faa0d454f3584f39285843f1ae28bec18cc3fee
         return re.sub("[^0-9a-zA-Z_]+", "__", data_set_name)
     else:

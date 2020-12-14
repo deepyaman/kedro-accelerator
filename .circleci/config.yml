@@ -14,6 +14,7 @@ commands:
       - checkout
       - python/install-packages:
           pip-dependency-file: src/requirements.txt
+          pkg-manager: pip
 
 job-setup: &job-setup
   parameters:

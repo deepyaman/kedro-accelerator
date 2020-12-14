@@ -12,6 +12,9 @@ commands:
         type: string
     steps:
       - checkout
+      - python/load-cache:
+          key: pip-<< parameters.kedro-version >>-<< parameters.python-version >>
+          dependency-file: src/requirements.txt
       - python/install-deps:
           dependency-file: src/requirements.txt
       - python/save-cache:

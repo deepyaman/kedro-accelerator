@@ -13,8 +13,7 @@ commands:
     steps:
       - checkout
       - python/install-packages:
-          pip-dependency-file: src/requirements.txt
-          pkg-manager: pip
+          args: -r src/requirements.txt
 
 job-setup: &job-setup
   parameters:
@@ -36,7 +35,7 @@ jobs:
           python-version: << parameters.python-version >>
           kedro-version: << parameters.kedro-version >>
       - run:
-          command: kedro lint --check-only
+          command: pipenv run kedro lint --check-only
           name: Lint
   build-and-run:
     <<: *job-setup
@@ -45,7 +44,7 @@ jobs:
           python-version: << parameters.python-version >>
           kedro-version: << parameters.kedro-version >>
       - run:
-          command: kedro run --hooks src.kedro_accelerator.plugins.TeePlugin
+          command: pipenv run kedro run --hooks src.kedro_accelerator.plugins.TeePlugin
           name: Run
   build-and-test:
     <<: *job-setup
@@ -54,7 +53,7 @@ jobs:
           python-version: << parameters.python-version >>
           kedro-version: << parameters.kedro-version >>
       - run:
-          command: kedro test
+          command: pipenv run kedro test
           name: Test
 
 workflows:

@@ -1,11 +1,13 @@
+import inspect
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Dict
 
 import kedro
 from kedro.framework.hooks import hook_impl
-from kedro.io import CachedDataSet, DataCatalog, MemoryDataSet
+from kedro.io import CachedDataSet, DataCatalog
 from kedro.pipeline import Pipeline
+from kedro.runner import AbstractRunner
 
 
 def _sub_nonword_chars(data_set_name: str) -> str:
@@ -33,12 +35,18 @@ class TeePlugin:
         # Create a copy of the unmodified data catalog for future saves.
         self.physical_catalog = catalog.shallow_copy()
 
+        # Get a reference to the runner object the pipeline is run with.
+        runner = next(
+            caller[0].f_locals.get("runner")
+            for caller in inspect.stack()
+            if isinstance(caller[0].f_locals.get("runner"), AbstractRunner)
+        )
+
         # Replace intermediate inputs and outputs with in-memory stores.
-        # TODO(deepyaman): Identify the default data set for the runner.
         self.data_set_names = set(catalog.list())
         catalog.add_all(
             {
-                name: MemoryDataSet()
+                name: runner.create_default_data_set(name)
                 for name in self.data_set_names - pipeline.inputs() - pipeline.outputs()
             },
             replace=True,

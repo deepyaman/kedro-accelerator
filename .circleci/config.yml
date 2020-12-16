@@ -46,7 +46,10 @@ jobs:
           kedro-version: << parameters.kedro-version >>
       - run:
           command: kedro run --hooks src.kedro_accelerator.plugins.TeePlugin
-          name: Run
+          name: Run the pipeline using the `SequentialRunner`
+      - run:
+          command: kedro run --parallel --hooks src.kedro_accelerator.plugins.TeePlugin
+          name: Run the pipeline using the `ParallelRunner`
   build-and-test:
     <<: *job-setup
     steps:

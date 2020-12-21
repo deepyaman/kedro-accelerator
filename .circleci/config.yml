@@ -65,13 +65,13 @@ workflows:
     jobs:
       - build-and-lint:
           python-version: "3.8"
-          kedro-version: 0.16.6
+          kedro-version: 0.17.0
       - build-and-run:
           matrix:
             parameters:
               python-version: ["3.6", "3.7", "3.8"]
               kedro-version:
-                [0.16.0, 0.16.1, 0.16.2, 0.16.3, 0.16.4, 0.16.5, 0.16.6]
+                [0.16.0, 0.16.1, 0.16.2, 0.16.3, 0.16.4, 0.16.5, 0.16.6, 0.17.0]
 
             # Older versions of Kedro have unresolvable dependencies. If the new
             # resolver, which is the default behavior since pip 20.3, is used in
@@ -90,4 +90,4 @@ workflows:
 
       - build-and-test:
           python-version: "3.8"
-          kedro-version: 0.16.6
+          kedro-version: 0.17.0

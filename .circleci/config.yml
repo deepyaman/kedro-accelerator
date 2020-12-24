@@ -45,10 +45,10 @@ jobs:
           python-version: << parameters.python-version >>
           kedro-version: << parameters.kedro-version >>
       - run:
-          command: kedro run --hooks src.kedro_accelerator.plugins.TeePlugin
+          command: kedro run --hooks $([[ << parameters.kedro-version >> < "0.17" ]] && echo src.)kedro_accelerator.plugins.TeePlugin
           name: Run the pipeline using the `SequentialRunner`
       - run:
-          command: kedro run --parallel --hooks src.kedro_accelerator.plugins.TeePlugin
+          command: kedro run --parallel --hooks $([[ << parameters.kedro-version >> < "0.17" ]] && echo src.)kedro_accelerator.plugins.TeePlugin
           name: Run the pipeline using the `ParallelRunner`
   build-and-test:
     <<: *job-setup

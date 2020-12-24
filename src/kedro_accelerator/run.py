@@ -77,7 +77,9 @@ class ProjectContext(KedroContext):
         """
         if kedro.__version__ < "0.17":
             self.hooks += extra_hooks or ()
-        super().__init__(package_name, project_path, env, extra_params)
+            super().__init__(project_path, env, extra_params)
+        else:
+            super().__init__(package_name, project_path, env, extra_params)
 
     def _get_pipelines(self) -> Dict[str, Pipeline]:
         return create_pipelines()

@@ -30,7 +30,8 @@
 from pathlib import Path
 from typing import Any, Dict, Tuple, Union
 
-from kedro.framework.context import KedroContext, load_package_context
+import kedro
+from kedro.framework.context import KedroContext
 from kedro.pipeline import Pipeline
 
 from kedro_accelerator.pipeline import create_pipelines
@@ -48,6 +49,7 @@ class ProjectContext(KedroContext):
 
     def __init__(
         self,
+        package_name: str,
         project_path: Union[Path, str],
         env: str = None,
         extra_params: Dict[str, Any] = None,
@@ -71,8 +73,9 @@ class ProjectContext(KedroContext):
                 KedroContext's execution. If specified, will be appended
                 to the list of hooks provided by user.
         """
-        self.hooks += extra_hooks or ()
-        super().__init__(project_path, env, extra_params)
+        if kedro.__version__ < "0.17":
+            self.hooks += extra_hooks or ()
+        super().__init__(package_name, project_path, env, extra_params)
 
     def _get_pipelines(self) -> Dict[str, Pipeline]:
         return create_pipelines()
@@ -81,6 +84,8 @@ class ProjectContext(KedroContext):
 def run_package():
     # Entry point for running a Kedro project packaged with `kedro package`
     # using `python -m <project_package>.run` command.
+    from kedro.framework.context import load_package_context
+
     project_context = load_package_context(
         project_path=Path.cwd(), package_name=Path(__file__).resolve().parent.name
     )

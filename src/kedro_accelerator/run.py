@@ -49,8 +49,8 @@ class ProjectContext(KedroContext):
 
     def __init__(
         self,
-        package_name: str,
         project_path: Union[Path, str],
+        package_name: str = None,  # Argument not used before Kedro 0.17
         env: str = None,
         extra_params: Dict[str, Any] = None,
         extra_hooks: Tuple = None,
@@ -64,6 +64,8 @@ class ProjectContext(KedroContext):
 
         Args:
             project_path: Project path to define the context for.
+            package_name: Package name for the Kedro project the context is
+                created for.
             env: Optional argument for configuration default environment to be used
                 for running the pipeline. If not specified, it defaults to "local".
             extra_params: Optional dictionary containing extra project parameters.

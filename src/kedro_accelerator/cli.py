@@ -40,7 +40,9 @@ from kedro.framework.cli.jupyter import jupyter as jupyter_group
 from kedro.framework.cli.pipeline import pipeline as pipeline_group
 from kedro.framework.cli.project import project_group
 from kedro.framework.cli.utils import KedroCliError, env_option, split_string
-from kedro.framework.context import load_context
+from kedro.framework.hooks import get_hook_manager
+from kedro.framework.hooks.manager import _register_hooks
+from kedro.framework.session import KedroSession
 from kedro.utils import load_obj
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -106,8 +108,8 @@ def _get_values_as_tuple(values: Iterable[str]) -> Tuple[str, ...]:
 def _reformat_load_versions(  # pylint: disable=unused-argument
     ctx, param, value
 ) -> Dict[str, str]:
-    """Reformat data structure from tuple to dictionary for `load-version`.
-        E.g ('dataset1:time1', 'dataset2:time2') -> {"dataset1": "time1", "dataset2": "time2"}.
+    """Reformat data structure from tuple to dictionary for `load-version`, e.g.:
+    ('dataset1:time1', 'dataset2:time2') -> {"dataset1": "time1", "dataset2": "time2"}.
     """
     load_versions_dict = {}
 
@@ -132,7 +134,8 @@ def _split_params(ctx, param, value):
         item = item.split(":", 1)
         if len(item) != 2:
             ctx.fail(
-                f"Invalid format of `{param.name}` option: Item `{item[0]}` must contain "
+                f"Invalid format of `{param.name}` option: "
+                f"Item `{item[0]}` must contain "
                 f"a key and a value separated by `:`."
             )
         key = item[0].strip()
@@ -229,17 +232,20 @@ def run(
     hooks = _get_values_as_tuple(hooks) if hooks else hooks
     hooks = tuple([load_obj(hook)() for hook in hooks])
 
-    context = load_context(Path.cwd(), env=env, extra_params=params, extra_hooks=hooks)
-    context.run(
-        tags=tag,
-        runner=runner_class(is_async=is_async),
-        node_names=node_names,
-        from_nodes=from_nodes,
-        to_nodes=to_nodes,
-        from_inputs=from_inputs,
-        load_versions=load_version,
-        pipeline_name=pipeline,
-    )
+    package_name = str(Path(__file__).resolve().parent.name)
+    with KedroSession.create(package_name, env=env, extra_params=params) as session:
+        hook_manager = get_hook_manager()
+        _register_hooks(hook_manager, hooks)
+        session.run(
+            tags=tag,
+            runner=runner_class(is_async=is_async),
+            node_names=node_names,
+            from_nodes=from_nodes,
+            to_nodes=to_nodes,
+            from_inputs=from_inputs,
+            load_versions=load_version,
+            pipeline_name=pipeline,
+        )
 
 
 cli.add_command(pipeline_group)

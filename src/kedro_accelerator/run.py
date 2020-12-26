@@ -30,7 +30,8 @@
 from pathlib import Path
 from typing import Any, Dict, Tuple, Union
 
-from kedro.framework.context import KedroContext, load_package_context
+import kedro
+from kedro.framework.context import KedroContext
 from kedro.pipeline import Pipeline
 
 from kedro_accelerator.pipeline import create_pipelines
@@ -49,6 +50,7 @@ class ProjectContext(KedroContext):
     def __init__(
         self,
         project_path: Union[Path, str],
+        package_name: str = None,  # Argument not used before Kedro 0.17
         env: str = None,
         extra_params: Dict[str, Any] = None,
         extra_hooks: Tuple = None,
@@ -62,6 +64,8 @@ class ProjectContext(KedroContext):
 
         Args:
             project_path: Project path to define the context for.
+            package_name: Package name for the Kedro project the context is
+                created for.
             env: Optional argument for configuration default environment to be used
                 for running the pipeline. If not specified, it defaults to "local".
             extra_params: Optional dictionary containing extra project parameters.
@@ -71,8 +75,11 @@ class ProjectContext(KedroContext):
                 KedroContext's execution. If specified, will be appended
                 to the list of hooks provided by user.
         """
-        self.hooks += extra_hooks or ()
-        super().__init__(project_path, env, extra_params)
+        if kedro.__version__ < "0.17":
+            self.hooks += extra_hooks or ()
+            super().__init__(project_path, env, extra_params)
+        else:
+            super().__init__(package_name, project_path, env, extra_params)
 
     def _get_pipelines(self) -> Dict[str, Pipeline]:
         return create_pipelines()
@@ -81,6 +88,8 @@ class ProjectContext(KedroContext):
 def run_package():
     # Entry point for running a Kedro project packaged with `kedro package`
     # using `python -m <project_package>.run` command.
+    from kedro.framework.context import load_package_context
+
     project_context = load_package_context(
         project_path=Path.cwd(), package_name=Path(__file__).resolve().parent.name
     )

@@ -62,7 +62,7 @@ setup(
         "kedro.hooks": ["kedro-accelerator = kedro_accelerator.plugins:hooks"]
     },
     python_requires=">=3.6, <3.9",
-    install_requires=["kedro>=0.16, <0.17"],
+    install_requires=["kedro>=0.16, <0.18"],
     extras_require={
         "docs": [
             "sphinx>=1.6.3, <2.0",

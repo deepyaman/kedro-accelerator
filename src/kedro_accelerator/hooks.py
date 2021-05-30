@@ -35,7 +35,7 @@ from kedro.io import DataCatalog
 from kedro.pipeline import Pipeline
 from kedro.versioning import Journal
 
-from kedro_accelerator.pipeline import create_pipeline
+from kedro_accelerator.pipeline import create_pipelines
 
 
 class ProjectHooks:

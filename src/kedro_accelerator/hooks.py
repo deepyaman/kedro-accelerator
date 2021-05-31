@@ -35,6 +35,8 @@ from kedro.io import DataCatalog
 from kedro.pipeline import Pipeline
 from kedro.versioning import Journal
 
+from kedro_accelerator.pipeline import create_pipelines
+
 
 class ProjectHooks:
     @hook_impl
@@ -46,7 +48,7 @@ class ProjectHooks:
 
         """
 
-        return {"__default__": Pipeline([])}
+        return create_pipelines()
 
     @hook_impl
     def register_config_loader(self, conf_paths: Iterable[str]) -> ConfigLoader:

@@ -65,7 +65,7 @@ workflows:
     jobs:
       - build-and-lint:
           python-version: "3.8"
-          kedro-version: 0.17.3
+          kedro-version: 0.17.4
       - build-and-run:
           matrix:
             parameters:
@@ -83,6 +83,7 @@ workflows:
                   0.17.1,
                   0.17.2,
                   0.17.3,
+                  0.17.4,
                 ]
 
             # Older versions of Kedro have unresolvable dependencies. If the new
@@ -102,4 +103,4 @@ workflows:
 
       - build-and-test:
           python-version: "3.8"
-          kedro-version: 0.17.3
+          kedro-version: 0.17.4

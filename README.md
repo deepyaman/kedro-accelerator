@@ -26,7 +26,6 @@ As of Kedro 0.16.4, `TeePlugin`—the core of Kedro-Accelerator—will be auto-d
 
 The following conditions must be true for Kedro-Accelerator to speed up your pipeline:
 
-- Your pipeline must not use transcoding.
 - Your project must use either `SequentialRunner` or `ParallelRunner`.
 
 ### Example

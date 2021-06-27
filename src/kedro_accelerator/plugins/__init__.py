@@ -6,7 +6,7 @@ from typing import Any, Dict
 import kedro
 from kedro.framework.hooks import hook_impl
 from kedro.io import CachedDataSet, DataCatalog
-from kedro.pipeline import Pipeline
+from kedro.pipeline.pipeline import TRANSCODING_SEPARATOR, Pipeline
 from kedro.runner import AbstractRunner
 
 
@@ -43,11 +43,14 @@ class TeePlugin:
         )
 
         # Replace intermediate inputs and outputs with in-memory stores.
+        # Transcoding is a case where writing to disk is required, since
+        # the act of reading/writing affects the object in the pipeline.
         self.data_set_names = set(catalog.list())
         catalog.add_all(
             {
                 name: runner.create_default_data_set(name)
                 for name in self.data_set_names - pipeline.inputs() - pipeline.outputs()
+                if TRANSCODING_SEPARATOR not in name
             },
             replace=True,
         )

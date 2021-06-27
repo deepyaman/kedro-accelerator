@@ -48,7 +48,7 @@ You can compare pipeline execution times with and without `TeePlugin`. Kedro-Acc
 | `TeePlugin`                                               | `kedro run --hooks kedro_accelerator.plugins.TeePlugin`           | 10 seconds (saving all outputs)                                             | [Log](https://github.com/quantumblacklabs/kedro/issues/420#issuecomment-658323282) |
 | `CachePlugin` (i.e. `CachedDataSet`) with `is_async=True` | `kedro run --async --hooks kedro_accelerator.plugins.CachePlugin` | 30 seconds (saving `split_data`, `train_model`, and `predict` node outputs) | [Log](https://github.com/quantumblacklabs/kedro/issues/420#issuecomment-658331422) |
 
-Prior to Kedro version 0.17.0, prefix extra hooks passed to `kedro run` with `src.` (e.g. `src.kedro_accelerator.plugins.TeePlugin`).
+Prior to Kedro version 0.17.4, prefix extra hooks passed to `kedro run` with `src.` (e.g. `src.kedro_accelerator.plugins.TeePlugin`).
 
 For a more complete discussion of the above benchmarks, see [quantumblacklabs/kedro#420 (comment)](https://github.com/quantumblacklabs/kedro/issues/420#issuecomment-658320132).
 

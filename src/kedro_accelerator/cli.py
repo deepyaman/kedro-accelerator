@@ -35,10 +35,6 @@ from typing import Dict, Iterable, Tuple
 
 import click
 from kedro.framework.cli import main as kedro_main
-from kedro.framework.cli.catalog import catalog as catalog_group
-from kedro.framework.cli.jupyter import jupyter as jupyter_group
-from kedro.framework.cli.pipeline import pipeline as pipeline_group
-from kedro.framework.cli.project import project_group
 from kedro.framework.cli.utils import KedroCliError, env_option, split_string
 from kedro.framework.hooks import get_hook_manager
 from kedro.framework.hooks.manager import _register_hooks

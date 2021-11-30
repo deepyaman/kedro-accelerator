@@ -248,14 +248,6 @@ def run(
         )
 
 
-cli.add_command(pipeline_group)
-cli.add_command(catalog_group)
-cli.add_command(jupyter_group)
-
-for command in project_group.commands.values():
-    cli.add_command(command)
-
-
 if __name__ == "__main__":
     os.chdir(str(PROJ_PATH))
     kedro_main()
